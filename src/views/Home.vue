@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import SearchBar from '../components/SearchBar.vue'
 import ThemeToggle from '../components/ThemeToggle.vue'
 import MiniPlayer from '../components/MiniPlayer.vue'
+import QuoteBar from '../components/QuoteBar.vue'
 
 const router = useRouter()
 
@@ -125,6 +126,9 @@ onMounted(() => {
           <MiniPlayer />
         </div>
       </div>
+
+      <!-- Quote Bar -->
+      <QuoteBar />
 
       <!-- Featured Post + Photo Card + Chatter + Theme -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">

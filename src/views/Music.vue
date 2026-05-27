@@ -21,7 +21,7 @@ const {
 <template>
   <div class="w-full max-w-6xl mx-auto mt-24 sm:mt-28 px-4 sm:px-6 lg:px-10 relative z-10 min-h-screen">
     <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">音乐</h1>
-    <p class="text-slate-600 dark:text-slate-400 mb-8 text-sm">按下空格键播�?暂停</p>
+    <p class="text-slate-600 dark:text-slate-400 mb-8 text-sm">谁家玉笛暗飞声，散入春风满洛城。此夜曲中闻折柳，何人不起故园情。 ——李白《春夜洛城闻笛》</p>
 
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
       <!-- Player -->
