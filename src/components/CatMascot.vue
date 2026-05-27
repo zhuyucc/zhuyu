@@ -1,10 +1,14 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 
 const catState = ref('idle')
 const isChatOpen = ref(false)
 const bubbleText = ref('')
 const bubbleVisible = ref(false)
+const messages = ref([])
+const inputText = ref('')
+const loading = ref(false)
+const chatBody = ref(null)
 
 const petMessages = [
   '唔…别戳啦～',
@@ -43,14 +47,87 @@ const pet = () => {
 
 const toggleChat = () => {
   isChatOpen.value = !isChatOpen.value
-  if (isChatOpen.value) catState.value = 'thinking'
-  else catState.value = 'idle'
+  if (isChatOpen.value) {
+    catState.value = 'thinking'
+    if (messages.value.length === 0) {
+      messages.value.push({ role: 'assistant', content: '你好呀！我是 zhuyu 的 AI 助手欢欢，有什么可以帮你的吗？' })
+    }
+  } else {
+    catState.value = 'idle'
+  }
 }
 
 const feed = () => {
   catState.value = 'petted'
   showBubble(feedMessages[Math.floor(Math.random() * feedMessages.length)])
   setTimeout(() => { catState.value = 'idle' }, 1500)
+}
+
+const scrollToBottom = async () => {
+  await nextTick()
+  if (chatBody.value) {
+    chatBody.value.scrollTop = chatBody.value.scrollHeight
+  }
+}
+
+const sendMessage = async () => {
+  const text = inputText.value.trim()
+  if (!text || loading.value) return
+
+  inputText.value = ''
+  messages.value.push({ role: 'user', content: text })
+  loading.value = true
+  messages.value.push({ role: 'assistant', content: '' })
+  await scrollToBottom()
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: messages.value.filter(m => m.content).map(m => ({ role: m.role, content: m.content })),
+      }),
+    })
+
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.error || 'Request failed')
+    }
+
+    const reader = res.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n')
+      buffer = lines.pop() || ''
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6)
+          if (data === '[DONE]') continue
+          try {
+            const parsed = JSON.parse(data)
+            const delta = parsed.choices?.[0]?.delta?.content
+            if (delta) {
+              messages.value[messages.value.length - 1].content += delta
+              await scrollToBottom()
+            }
+          } catch { }
+        }
+      }
+    }
+  } catch (err) {
+    messages.value[messages.value.length - 1].content = '呜…出错了，稍后再试试吧～'
+  } finally {
+    loading.value = false
+    catState.value = 'idle'
+    await scrollToBottom()
+  }
 }
 </script>
 
@@ -110,13 +187,17 @@ const feed = () => {
               <h3 class="text-lg font-bold text-slate-800 dark:text-white">AI 助手</h3>
               <button @click="isChatOpen = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">&times;</button>
             </div>
-            <div class="h-48 bg-slate-50 dark:bg-slate-900 rounded-2xl p-4 mb-4 overflow-y-auto text-sm text-slate-600 dark:text-slate-300">
-              你好呀！我是 zhuyu 的 AI 助手，有什么可以帮你的吗？
+            <div ref="chatBody" class="h-48 bg-slate-50 dark:bg-slate-900 rounded-2xl p-4 mb-4 overflow-y-auto text-sm text-slate-600 dark:text-slate-300 space-y-2">
+              <div v-for="(msg, i) in messages" :key="i" :class="msg.role === 'user' ? 'text-right' : ''">
+                <span :class="msg.role === 'user' ? 'bg-indigo-500 text-white px-3 py-1.5 rounded-2xl inline-block max-w-[80%]' : 'text-slate-600 dark:text-slate-300'">
+                  {{ msg.content || (loading && i === messages.length - 1 ? '…' : '') }}
+                </span>
+              </div>
             </div>
-            <div class="flex gap-2">
-              <input type="text" placeholder="输入消息..." class="flex-1 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
-               <button class="px-4 py-2 bg-indigo-500 text-white rounded-xl text-sm font-bold hover:bg-indigo-600 transition-colors">发送</button>
-            </div>
+            <form class="flex gap-2" @submit.prevent="sendMessage">
+              <input v-model="inputText" type="text" placeholder="输入消息..." :disabled="loading" class="flex-1 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 disabled:opacity-50" />
+              <button type="submit" :disabled="loading" class="px-4 py-2 bg-indigo-500 text-white rounded-xl text-sm font-bold hover:bg-indigo-600 transition-colors disabled:opacity-50">发送</button>
+            </form>
           </div>
         </div>
       </transition>
