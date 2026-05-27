@@ -1,27 +1,23 @@
 {
-  "name": "nuxt-app",
+  "name": "xinghuisama-site",
   "private": true,
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "nuxt": "^3.10.3",
-    "unocss": "^0.58.6",
-    "vue": "^3.4.21",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^3.4.19",
+    "vue": "^3.4.0",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
-    "@element-plus/nuxt": "^1.0.7",
-    "@iconify-json/carbon": "^1.1.31",
-    "@iconify-json/material-symbols": "^1.1.75",
-    "@unocss/nuxt": "^0.58.6",
-    "@vueuse/core": "^10.9.0",
-    "@vueuse/nuxt": "^10.9.0",
-    "element-plus": "^2.6.1"
+    "@tailwindcss/typography": "^0.5.19",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^5.4.0"
   }
 }
