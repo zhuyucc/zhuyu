@@ -3,10 +3,41 @@ import { ref } from 'vue'
 
 const catState = ref('idle')
 const isChatOpen = ref(false)
-const isFeedOpen = ref(false)
+const bubbleText = ref('')
+const bubbleVisible = ref(false)
+
+const petMessages = [
+  '唔…别戳啦～',
+  '喵～？',
+  '干嘛呀～',
+  '好困…zzz',
+  '再戳我就生气啦！',
+  '嘿嘿～',
+  '耳朵痒痒的…',
+]
+
+const feedMessages = [
+  '小鱼干真好吃！',
+  '再来一条～',
+  '你对我最好啦！',
+  '咔嚓咔嚓…',
+  '还有吗还有吗？',
+  '吃饱了，想睡觉…',
+  '鱼鱼永远的神！',
+]
+
+let bubbleTimer = null
+
+const showBubble = (text) => {
+  bubbleText.value = text
+  bubbleVisible.value = true
+  clearTimeout(bubbleTimer)
+  bubbleTimer = setTimeout(() => { bubbleVisible.value = false }, 3000)
+}
 
 const pet = () => {
   catState.value = 'petted'
+  showBubble(petMessages[Math.floor(Math.random() * petMessages.length)])
   setTimeout(() => { catState.value = 'idle' }, 1500)
 }
 
@@ -16,8 +47,10 @@ const toggleChat = () => {
   else catState.value = 'idle'
 }
 
-const toggleFeed = () => {
-  isFeedOpen.value = !isFeedOpen.value
+const feed = () => {
+  catState.value = 'petted'
+  showBubble(feedMessages[Math.floor(Math.random() * feedMessages.length)])
+  setTimeout(() => { catState.value = 'idle' }, 1500)
 }
 </script>
 
@@ -36,7 +69,7 @@ const toggleFeed = () => {
             </svg>
           </button>
           <button
-            @click="toggleFeed"
+            @click="feed"
             class="bg-white/90 dark:bg-slate-700/90 p-2.5 rounded-full shadow-md hover:scale-110 active:scale-95 transition-transform border border-gray-100 dark:border-slate-600 flex items-center justify-center backdrop-blur-sm"
             title="喂小鱼干"
           >
@@ -44,6 +77,14 @@ const toggleFeed = () => {
           </button>
         </div>
         <div class="w-[120px] h-[120px] relative cursor-pointer" @click="pet">
+          <transition name="bubble-fade">
+            <div v-if="bubbleVisible" class="absolute -top-16 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+              <div class="bg-white dark:bg-slate-700 text-slate-700 dark:text-white text-xs font-medium px-3 py-1.5 rounded-xl shadow-lg border border-slate-200 dark:border-slate-600 whitespace-nowrap max-w-[160px] truncate">
+                {{ bubbleText }}
+              </div>
+              <div class="w-2.5 h-2.5 bg-white dark:bg-slate-700 rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2 border-r border-b border-slate-200 dark:border-slate-600"></div>
+            </div>
+          </transition>
           <div
             class="cat-sprite w-full h-full"
             :class="{
@@ -95,5 +136,15 @@ const toggleFeed = () => {
 .cat-thinking {
   animation: catIdle 0.6s infinite;
   background-position-y: 0%;
+}
+
+.bubble-fade-enter-active,
+.bubble-fade-leave-active {
+  transition: all 0.25s ease;
+}
+.bubble-fade-enter-from,
+.bubble-fade-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
 }
 </style>
