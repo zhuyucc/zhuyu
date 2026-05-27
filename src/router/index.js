@@ -7,6 +7,7 @@ const routes = [
   { path: '/projects', name: 'Projects', component: () => import('../views/Projects.vue') },
   { path: '/timeline', name: 'Timeline', component: () => import('../views/Timeline.vue') },
   { path: '/photowall', name: 'PhotoWall', component: () => import('../views/PhotoWall.vue') },
+  { path: '/photowall/:albumId', name: 'PhotoAlbum', component: () => import('../views/PhotoAlbumDetail.vue') },
   { path: '/music', name: 'Music', component: () => import('../views/Music.vue') },
   { path: '/tree', name: 'Tree', component: () => import('../views/Tree.vue') },
   { path: '/moments', name: 'Moments', component: () => import('../views/Moments.vue') },

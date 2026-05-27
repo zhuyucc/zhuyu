@@ -20,8 +20,14 @@ export const handler = async (event) => {
       body: JSON.stringify({
         model: 'GLM-4.7-Flash',
         messages: [
-          { role: 'system', content: '你是 zhuyu 博客的 AI 助手，名叫欢欢。你是一只可爱的暹罗猫，性格活泼温柔。请用可爱简短的方式回答问题。' },
+          { role: 'system', content: '你是 zhuyu 博客的 AI 助手，名叫包子。你是一只简州猫，性格温柔友善。请用简洁自然的方式回答问题，偶尔带一点猫娘语气即可，不要每句都加。当需要查询实时信息（如天气、新闻等）时，使用 web_search 工具搜索获取。' },
           ...messages,
+        ],
+        tools: [
+          {
+            type: 'web_search',
+            web_search: { search_result: true },
+          },
         ],
         stream: true,
       }),
@@ -35,11 +41,28 @@ export const handler = async (event) => {
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
     let result = ''
+    let buf = ''
 
     while (true) {
       const { done, value } = await reader.read()
       if (done) break
-      result += decoder.decode(value)
+
+      buf += decoder.decode(value, { stream: true })
+      const lines = buf.split('\n')
+      buf = lines.pop() || ''
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue
+        const data = line.slice(6)
+        if (data === '[DONE]') { result += line + '\n'; continue }
+        try {
+          const parsed = JSON.parse(data)
+          const delta = parsed.choices?.[0]?.delta
+          if (delta?.content || delta?.role === 'assistant' || delta?.tool_calls) {
+            result += line + '\n'
+          }
+        } catch {}
+      }
     }
 
     return {

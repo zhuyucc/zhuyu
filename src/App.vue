@@ -58,7 +58,7 @@ const { currentSong } = useMusicPlayer()
   <FloatingPlayer />
   <div class="relative z-10 flex-1 flex flex-col">
     <router-view v-slot="{ Component, route }">
-      <transition name="fade" mode="out-in" @after-leave="onAfterLeave">
+      <transition name="fade" @after-leave="onAfterLeave">
         <component :is="Component" :key="route.path" :is-dark="isDark" @toggle-dark="toggleDark" />
       </transition>
     </router-view>
@@ -71,7 +71,7 @@ const { currentSong } = useMusicPlayer()
 <style>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.12s ease;
+  transition: opacity 0.06s ease;
 }
 .fade-enter-from,
 .fade-leave-to {
