@@ -1,11 +1,13 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useMusicPlayer } from './stores/music.js'
 import { pendingScrollResolve } from './router/index.js'
+import { useRoute } from 'vue-router'
 import NavBar from './components/NavBar.vue'
 import BackgroundEffects from './components/BackgroundEffects.vue'
 import CatMascot from './components/CatMascot.vue'
 import MobileNav from './components/MobileNav.vue'
+import FloatingPlayer from './components/FloatingPlayer.vue'
 import ClockBar from './components/ClockBar.vue'
 import Footer from './components/Footer.vue'
 
@@ -53,6 +55,7 @@ const { currentSong } = useMusicPlayer()
     preload="metadata"
   ></audio>
 
+  <FloatingPlayer />
   <div class="relative z-10 flex-1 flex flex-col">
     <router-view v-slot="{ Component, route }">
       <transition name="fade" mode="out-in" @after-leave="onAfterLeave">
