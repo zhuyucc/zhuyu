@@ -26,10 +26,18 @@ const {
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
       <!-- Player -->
       <div class="lg:col-span-1 rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-8 flex flex-col items-center">
-        <div class="w-44 h-44 rounded-2xl overflow-hidden shadow-xl mb-6 flex items-center justify-center bg-gradient-to-br from-indigo-400 to-purple-500">
-          <svg class="w-20 h-20 text-white/80" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-          </svg>
+        <div class="relative w-44 h-44 flex items-center justify-center mb-6">
+          <!-- Water ripple rings -->
+          <div v-if="state.isPlaying" class="ripple-ring !border-[3px]"></div>
+          <div v-if="state.isPlaying" class="ripple-ring !border-[3px]"></div>
+          <div v-if="state.isPlaying" class="ripple-ring !border-[3px]"></div>
+          <!-- CD disc -->
+          <div
+            class="w-44 h-44 rounded-full overflow-hidden shadow-xl relative z-10 animate-disc-spin"
+            :style="{ animationPlayState: state.isPlaying ? 'running' : 'paused' }"
+          >
+              <img src="/img/music.svg" class="w-full h-full" alt="music">
+          </div>
         </div>
 
         <div class="text-center mb-6 w-full">
@@ -106,16 +114,11 @@ const {
             :class="idx === state.currentIndex ? 'bg-indigo-50 dark:bg-indigo-900/30' : 'hover:bg-white/50 dark:hover:bg-slate-700/50'"
           >
             <div
-              class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-indigo-400 to-purple-500 text-white relative overflow-hidden"
+              class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 relative"
+              :class="idx === state.currentIndex ? 'animate-disc-spin' : ''"
+              :style="idx === state.currentIndex ? { animationPlayState: state.isPlaying ? 'running' : 'paused' } : {}"
             >
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"/></svg>
-              <div v-if="idx === state.currentIndex && state.isPlaying" class="absolute inset-0 bg-black/30 flex items-center justify-center">
-                <div class="flex gap-0.5 items-end h-4">
-                  <span class="w-0.5 bg-white rounded-full animate-equalizer" style="height:60%"></span>
-                  <span class="w-0.5 bg-white rounded-full animate-equalizer" style="height:100%;animation-delay:0.2s"></span>
-                  <span class="w-0.5 bg-white rounded-full animate-equalizer" style="height:40%;animation-delay:0.4s"></span>
-                </div>
-              </div>
+              <img src="/img/mp3.svg" class="w-full h-full" alt="mp3">
             </div>
             <div class="flex-1 min-w-0">
               <h4 class="font-bold text-sm text-slate-900 dark:text-white truncate" :class="{ 'text-indigo-600 dark:text-indigo-400': idx === state.currentIndex }">

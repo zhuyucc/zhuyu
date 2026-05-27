@@ -1,20 +1,36 @@
 <script setup>
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, onMounted } from 'vue'
 import { useMusicPlayer } from '../stores/music.js'
 
 const { state, lyricsData, currentLyricIndex } = useMusicPlayer()
 const containerRef = ref(null)
 const lineRefs = ref([])
 
-watch(currentLyricIndex, async () => {
-  await nextTick()
+const scrollToCurrent = (behavior = 'instant') => {
   const idx = currentLyricIndex.value
   if (idx >= 0 && containerRef.value && lineRefs.value[idx]) {
     const container = containerRef.value
     const line = lineRefs.value[idx]
     const offset = line.offsetTop - container.offsetHeight / 2 + line.offsetHeight / 2
-    container.scrollTo({ top: offset, behavior: 'smooth' })
+    container.scrollTo({ top: offset, behavior })
   }
+}
+
+onMounted(async () => {
+  await nextTick()
+  scrollToCurrent('instant')
+})
+
+watch(lyricsData, async () => {
+  lineRefs.value = []
+  await nextTick()
+  await nextTick()
+  scrollToCurrent('instant')
+})
+
+watch(currentLyricIndex, async () => {
+  await nextTick()
+  scrollToCurrent('smooth')
 })
 </script>
 
@@ -32,7 +48,7 @@ watch(currentLyricIndex, async () => {
         v-for="(line, idx) in lyricsData"
         :key="idx"
         :ref="el => { if (el) lineRefs[idx] = el }"
-        class="transition-all duration-300 py-2 px-4 rounded-lg text-lg md:text-xl leading-relaxed"
+        class="transition-all duration-300 py-2 px-4 rounded-lg text-lg md:text-xl leading-relaxed text-center"
         :class="{
           'text-indigo-600 dark:text-indigo-400 font-bold scale-110': idx === currentLyricIndex,
           'text-slate-600 dark:text-slate-400': idx === currentLyricIndex - 1 || idx === currentLyricIndex + 1,

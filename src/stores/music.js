@@ -51,8 +51,23 @@ const formatTime = (t) => {
 const parseLRC = (text) => {
   const lines = text.split('\n')
   const result = []
+  const credits = {}
   const timeRegex = /\[(\d{2}):(\d{2})\.(\d{2,3})\]/
+
   for (const line of lines) {
+    const trimmed = line.trim()
+    // Extract JSON credit lines (NetEase format) and add to lyrics
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+      try {
+        const json = JSON.parse(trimmed)
+        if (json.c && Array.isArray(json.c) && typeof json.t === 'number') {
+          const text = json.c.map(s => s.tx || '').join('')
+          if (text) result.push({ time: json.t, text })
+        }
+      } catch { /* skip malformed json */ }
+      continue
+    }
+
     const match = line.match(timeRegex)
     if (match) {
       const m = parseInt(match[1])
