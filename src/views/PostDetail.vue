@@ -1,144 +1,13 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getPost } from '../composables/usePosts.js'
+import { getChatter } from '../composables/useChatter.js'
 
 const route = useRoute()
 const router = useRouter()
 
 const isPost = computed(() => route.path.startsWith('/posts'))
-
-const entries = {
-  post_1778574324: {
-    title: 'Leetcode一百题——单词搜索',
-    date: '写作时间：2026-05-12 16:25:24',
-    image: 'https://bu.dusays.com/2026/05/12/6a02e3a107b1a.png',
-    tags: ['Leetcode', 'C++', '题解', '工作'],
-    tagColor: 'pink',
-    content: `<p>给定一个 <code>m x n</code> 二维字符网格 <code>board</code> 和一个字符串单词 <code>word</code> 。如果 <code>word</code> 存在于网格中，返回 <code>true</code> ；否则，返回 <code>false</code> 。</p>
-<p>单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中"相邻"单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。</p>
-<br/><p>示例</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：board = [['A','B','C','E'],['S','F','C','S'],['A','D','E','E']], word = "ABCCED"
-输出：true
-</code></pre>
-<p><strong>示例 2：</strong></p>
-<pre><code>输入：board = [['A','B','C','E'],['S','F','C','S'],['A','D','E','E']], word = "SEE"
-输出：true
-</code></pre>
-<p><strong>示例 3：</strong></p>
-<pre><code>输入：board = [['A','B','C','E'],['S','F','C','S'],['A','D','E','E']], word = "ABCB"
-输出：false
-</code></pre>
-<br/><p>示例</p>
-<h3>1. 算法核心思想</h3>
-<p>本题是一道典型的二维矩阵回溯（Backtracking）题目。其核心在于：以矩阵中的每一个点作为潜在起点，尝试向四个方向"嗅探"目标单词的路径。</p>
-<h3>2. 代码逻辑拆解</h3>
-<ul>
-<li><strong>第一阶段：全图扫描寻起点</strong></li>
-<li><strong>第二阶段：防御性剪枝与匹配判定</strong></li>
-<li><strong>第三阶段：标记与扩散</strong></li>
-<li><strong>第四阶段：撤销选择（回溯灵魂）</strong></li>
-</ul>
-<h3>3. 复杂度分析</h3>
-<ul>
-<li><strong>时间复杂度：</strong> O(N·3^L)</li>
-<li><strong>空间复杂度：</strong> O(N)</li>
-</ul>`,
-    recommended: [
-      { title: 'GROMACS 2025 分子动力学模拟初步', date: '2026-03-24 07:00:45', link: '/posts/2222' },
-      { title: 'Computational Chemistry Tool 工具介绍', date: '2026-04-01 07:00:23', link: '/posts/draft_1775049966680' },
-      { title: 'Leetcode一百题——字母异位词分组', date: '2026-04-07 15:34:18', link: '/posts/draft_1775546951004' },
-    ],
-    toc: ['1. 算法核心思想', '2. 代码逻辑拆解', '3. 复杂度分析'],
-    recentRecords: null,
-  },
-  photo_202604: {
-    title: '南昌五一摄影',
-    date: '写作时间：2026-05-07 10:00:00',
-    image: 'https://bu.dusays.com/2026/05/07/69fc46808a782.jpg',
-    tags: ['摄影', '生活', '南昌', '五一'],
-    tagColor: 'pink',
-    content: `<p>五一假期去了南昌，拍了一些照片记录生活。</p>
-<p>南昌的春天真的很美，滕王阁、八一广场、秋水广场……每一个地方都充满了故事。</p>
-<p>随手拍了一些照片，分享一下。</p>
-<p>希望下次还能再来南昌看看。</p>`,
-    recommended: [
-      { title: 'Leetcode一百题——单词搜索', date: '2026-05-12 16:25:24', link: '/posts/post_1778574324' },
-      { title: '春日随拍', date: '2026-04-24 16:31:45', link: '/chatter/chatter_1777019505' },
-      { title: 'GROMACS 2025 分子动力学模拟初步', date: '2026-03-24 07:00:45', link: '/posts/2222' },
-    ],
-    toc: null,
-    recentRecords: null,
-  },
-  draft_1775049966680: {
-    title: 'GROMACS 分子动力学模拟研究',
-    date: '写作时间：2026-03-15 08:30:00',
-    image: 'https://bu.dusays.com/2026/03/24/69c26fe4acdb5.jpg',
-    tags: ['GROMACS', '科研', '分子动力学'],
-    tagColor: 'pink',
-    content: `<p>最近在研究使用 GROMACS 进行蛋白质分子动力学模拟。</p>
-<p>GROMACS 是一个功能强大的分子动力学模拟软件包，广泛应用于蛋白质、脂质、核酸等生物大分子的模拟研究。</p>
-<h3>研究背景</h3>
-<p>分子动力学模拟能够从原子级别揭示生物大分子的运动规律，对于理解蛋白质功能、药物设计等具有重要意义。</p>
-<h3>模拟步骤</h3>
-<ol>
-<li>准备结构文件（PDB）</li>
-<li>拓扑文件生成</li>
-<li>能量最小化</li>
-<li>平衡模拟（NVT、NPT）</li>
-<li>生产模拟</li>
-<li>轨迹分析</li>
-</ol>
-<h3>初步结果</h3>
-<p>经过一夜的计算，终于得到了初步结果。蛋白质的构象变化符合预期，RMSD 在合理范围内波动。</p>`,
-    recommended: [
-      { title: 'Leetcode一百题——单词搜索', date: '2026-05-12 16:25:24', link: '/posts/post_1778574324' },
-      { title: 'Computational Chemistry Tool 工具介绍', date: '2026-04-01 07:00:23', link: '/posts/draft_1775049966681' },
-    ],
-    toc: ['研究背景', '模拟步骤', '初步结果'],
-    recentRecords: null,
-  },
-  chatter_1777019505: {
-    title: '音乐板块完成',
-    date: '2026-04-24 16:31:45',
-    image: 'https://bu.dusays.com/2026/04/24/69eb2a5a6e185.jpg',
-    tags: ['博客更新', '博客运行'],
-    tagColor: 'slate',
-    mood: '💢心情：平静',
-    content: `<p>本来没想做音乐模块的，但是感觉缺点什么，花了一下午把音乐模块构建出来了</p>
-<p>😶🌫️😶🌫️😶🌫️</p>`,
-    recommended: null,
-    toc: null,
-    recentRecords: [
-      { title: '实现了解耦，为最终上线准备', date: '2026-04-24 10:42:05', link: '/chatter/chatter_1776998525' },
-      { title: '归档模组重建', date: '2026-04-15 16:12:25', link: '/chatter/chatter_1776240745' },
-      { title: '弹幕背景', date: '2026-04-15 11:25:08', link: '/chatter/chatter_1776223508' },
-    ],
-  },
-  chatter_1776240745: {
-    title: '网站重构上线',
-    date: '2026-03-20 14:00:00',
-    image: 'https://bu.dusays.com/2026/03/24/69c26fe4d9486.jpg',
-    tags: ['博客更新', '前端'],
-    tagColor: 'slate',
-    mood: '😊心情：开心',
-    content: `<p>基于 Next.js 完成了网站的重构，体验更好了。</p>
-<p>新的架构更加清晰，加载速度也提升了不少。这次重构主要优化了以下几个方面：</p>
-<ul>
-<li>使用 Next.js App Router 替代 Pages Router</li>
-<li>优化了图片加载策略</li>
-<li>改进了暗色模式的支持</li>
-<li>新增了音乐播放功能</li>
-</ul>
-<p>后续还会继续完善其他功能模块。</p>`,
-    recommended: null,
-    toc: null,
-    recentRecords: [
-      { title: '音乐板块完成', date: '2026-04-24 16:31:45', link: '/chatter/chatter_1777019505' },
-      { title: '归档模组重建', date: '2026-04-15 16:12:25', link: '/chatter/chatter_1776240745' },
-    ],
-  },
-}
 
 const fallback = {
   title: '未找到文章',
@@ -153,7 +22,8 @@ const fallback = {
 }
 
 const detail = computed(() => {
-  return entries[route.params.id] || fallback
+  if (isPost.value) return getPost(route.params.id) || fallback
+  return getChatter(route.params.id) || fallback
 })
 
 const goBack = () => {

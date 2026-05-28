@@ -1,4 +1,5 @@
 <script setup>
+import { ref, computed } from 'vue'
 import { useMusicPlayer } from '../stores/music.js'
 import LyricsPanel from '../components/LyricsPanel.vue'
 
@@ -16,6 +17,23 @@ const {
   toggleMute,
   setVolume,
 } = useMusicPlayer()
+
+const searchQuery = ref('')
+
+const filteredPlaylist = computed(() => {
+  const q = searchQuery.value.trim().toLowerCase()
+  if (!q) return playlist
+  return playlist.filter(s => {
+    const title = (s.title || '').toLowerCase()
+    const artist = (s.artist || '').toLowerCase()
+    return title.includes(q) || artist.includes(q)
+  })
+})
+
+function pickSong(song) {
+  const idx = playlist.indexOf(song)
+  if (idx >= 0) selectSong(idx)
+}
 </script>
 
 <template>
@@ -103,30 +121,49 @@ const {
       <div class="rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6">
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-lg font-bold text-slate-900 dark:text-white">播放列表</h2>
-          <span class="text-xs text-slate-400">{{ playlist.length }} 首</span>
+          <span class="text-xs text-slate-400">{{ filteredPlaylist.length }} / {{ playlist.length }} 首</span>
         </div>
-        <div class="space-y-2">
+
+        <form class="relative group mb-4" @submit.prevent>
+          <input
+            type="text"
+            v-model="searchQuery"
+            class="w-full pl-10 pr-4 py-2.5 bg-white/50 dark:bg-slate-700/50 border border-white/40 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 text-slate-800 dark:text-slate-200 text-sm transition-all placeholder-slate-400"
+            placeholder="搜索歌曲或歌手..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+        </form>
+
+        <div v-if="filteredPlaylist.length === 0" class="text-center py-8 text-slate-400 text-sm">未找到匹配的歌曲</div>
+        <div v-else class="space-y-1">
           <div
-            v-for="(song, idx) in playlist"
+            v-for="song in filteredPlaylist"
             :key="song.id"
-            @click="selectSong(idx)"
-            class="flex items-center gap-4 p-3 rounded-2xl transition-colors cursor-pointer group/song"
-            :class="idx === state.currentIndex ? 'bg-indigo-50 dark:bg-indigo-900/30' : 'hover:bg-white/50 dark:hover:bg-slate-700/50'"
+            @click="pickSong(song)"
+            class="flex items-center gap-3 p-2.5 rounded-xl transition-colors cursor-pointer group/song"
+            :class="song === playlist[state.currentIndex] ? 'bg-indigo-50 dark:bg-indigo-900/30' : 'hover:bg-white/50 dark:hover:bg-slate-700/50'"
           >
             <div
-              class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 relative"
-              :class="idx === state.currentIndex ? 'animate-disc-spin' : ''"
-              :style="idx === state.currentIndex ? { animationPlayState: state.isPlaying ? 'running' : 'paused' } : {}"
+              class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 relative"
+              :class="song === playlist[state.currentIndex] ? 'animate-disc-spin' : ''"
+              :style="song === playlist[state.currentIndex] ? { animationPlayState: state.isPlaying ? 'running' : 'paused' } : {}"
             >
               <img src="/img/mp3.svg" class="w-full h-full" alt="mp3">
             </div>
             <div class="flex-1 min-w-0">
-              <h4 class="font-bold text-sm text-slate-900 dark:text-white truncate" :class="{ 'text-indigo-600 dark:text-indigo-400': idx === state.currentIndex }">
+              <h4 class="font-semibold text-sm text-slate-900 dark:text-white truncate" :class="{ 'text-indigo-600 dark:text-indigo-400': song === playlist[state.currentIndex] }">
                 {{ song.title }}
               </h4>
               <p class="text-xs text-slate-500 dark:text-slate-400 truncate">{{ song.artist }}</p>
             </div>
-            <div v-if="idx === state.currentIndex" class="flex-shrink-0">
+            <div v-if="song === playlist[state.currentIndex]" class="flex-shrink-0">
               <svg class="w-5 h-5 text-indigo-500" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
             </div>
           </div>

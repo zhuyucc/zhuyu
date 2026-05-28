@@ -25,9 +25,30 @@ const router = createRouter({
   },
 })
 
+let explicitNav = false
+const origPush = router.push.bind(router)
+const origReplace = router.replace.bind(router)
+router.push = (to) => { explicitNav = true; return origPush(to) }
+router.replace = (to) => { explicitNav = true; return origReplace(to) }
+
+const isDetail = (p) => p.startsWith('/posts/') || p.startsWith('/chatter/')
+
 router.beforeEach((to, from) => {
-  if (to.path.startsWith('/posts/') || to.path.startsWith('/chatter/')) {
+  if (explicitNav) {
+    explicitNav = false
+    if (isDetail(to.path) && !isDetail(from.path)) {
+      sessionStorage.setItem('back_target', from.fullPath)
+    }
+    return
+  }
+
+  const backTarget = sessionStorage.getItem('back_target')
+
+  if (isDetail(to.path) && !isDetail(from.path)) {
     sessionStorage.setItem('back_target', from.fullPath)
+  } else if (backTarget && isDetail(from.path) && !isDetail(to.path) && to.fullPath !== backTarget) {
+    sessionStorage.removeItem('back_target')
+    return backTarget
   }
 })
 

@@ -11,16 +11,13 @@ const moments = [
     <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">说说</h1>
     <p class="text-slate-600 dark:text-slate-400 mb-8 text-sm">随手记录的点滴</p>
     <div class="space-y-6">
-      <div v-for="(item, idx) in moments" :key="idx" class="rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6 transition-all duration-500 hover:scale-[1.01]">
-        <div class="flex items-start gap-4">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">X</div>
-          <div class="flex-1">
-            <p class="text-slate-800 dark:text-slate-200 text-sm leading-relaxed">{{ item.content }}</p>
-            <div class="flex items-center gap-3 mt-3">
-              <span class="text-xs text-slate-400">{{ item.date }}</span>
-              <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-bold uppercase">{{ item.type }}</span>
-            </div>
+      <div v-for="(item, idx) in moments" :key="idx" class="rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl overflow-hidden">
+        <div class="p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-[10px] font-black text-indigo-500 uppercase tracking-widest">{{ item.type }}</span>
+            <span class="text-xs text-slate-400 font-mono">{{ item.date }}</span>
           </div>
+          <p class="text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{{ item.content }}</p>
         </div>
       </div>
     </div>

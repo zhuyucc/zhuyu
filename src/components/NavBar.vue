@@ -6,14 +6,12 @@ const route = useRoute()
 
 const navLinks = [
   { path: '/', label: '首页' },
-  { path: '/projects', label: '项目' },
-  { path: '/timeline', label: '归档' },
+  { path: '/projects', label: '文章' },
+  { path: '/timeline', label: '时间线' },
   { path: '/photowall', label: '照片墙' },
   { path: '/music', label: '音乐' },
   { path: '/tree', label: '灵境' },
-  { path: '/moments', label: '说说' },
   { path: '/chatter', label: '杂谈' },
-  { path: '/friends', label: '友链' },
   { path: '/about', label: '关于' },
 ]
 
