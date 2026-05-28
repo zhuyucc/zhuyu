@@ -37,7 +37,7 @@ const { currentSong } = useMusicPlayer()
 
 <template>
   <BackgroundEffects :is-dark="isDark" />
-  <NavBar :is-dark="isDark" />
+  <NavBar :is-dark="isDark" @toggle-dark="toggleDark" />
   <MobileNav />
 
   <audio
