@@ -157,8 +157,8 @@ const detail = computed(() => {
 })
 
 const goBack = () => {
-  const from = sessionStorage.getItem('detail_from')
-  router.push(from && from !== route.fullPath ? from : '/')
+  const target = sessionStorage.getItem('back_target')
+  router.replace(target && target !== route.fullPath ? target : '/')
 }
 
 const now = new Date()
@@ -187,7 +187,7 @@ const scrollToToc = (label) => {
 </script>
 
 <template>
-  <div style="opacity:1;transform:translateY(0);transition:opacity 0.15s ease, transform 0.15s ease">
+  <div>
     <main class="w-[95%] md:w-[90%] max-w-6xl mx-auto mt-24 md:mt-28 flex flex-col lg:flex-row gap-6 md:gap-8 relative z-10">
       <article class="flex-1 bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl shadow-2xl border border-white/40 dark:border-white/10 overflow-hidden transition-colors duration-700" :class="isPost ? 'rounded-3xl' : 'rounded-[40px]'">
         <div class="w-full aspect-video bg-slate-200 dark:bg-slate-700 relative group">

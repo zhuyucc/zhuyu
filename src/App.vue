@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useMusicPlayer } from './stores/music.js'
-import { pendingScrollResolve } from './router/index.js'
 import { useRoute } from 'vue-router'
 import NavBar from './components/NavBar.vue'
 import BackgroundEffects from './components/BackgroundEffects.vue'
@@ -13,10 +12,6 @@ import Footer from './components/Footer.vue'
 
 const isDark = ref(false)
 
-const onAfterLeave = () => {
-  if (pendingScrollResolve) pendingScrollResolve()
-}
-
 const toggleDark = () => {
   isDark.value = !isDark.value
   document.documentElement.classList.toggle('dark', isDark.value)
@@ -24,7 +19,6 @@ const toggleDark = () => {
 }
 
 onMounted(() => {
-  if (pendingScrollResolve) pendingScrollResolve()
   const saved = localStorage.getItem('theme')
   if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     isDark.value = true
@@ -58,23 +52,10 @@ const { currentSong } = useMusicPlayer()
   <FloatingPlayer />
   <div class="relative z-10 flex-1 flex flex-col">
     <router-view v-slot="{ Component, route }">
-      <transition name="fade" @after-leave="onAfterLeave">
-        <component :is="Component" :key="route.path" :is-dark="isDark" @toggle-dark="toggleDark" />
-      </transition>
+      <component :is="Component" :key="route.path" :is-dark="isDark" @toggle-dark="toggleDark" />
     </router-view>
     <ClockBar />
     <Footer />
   </div>
   <CatMascot />
 </template>
-
-<style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.06s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

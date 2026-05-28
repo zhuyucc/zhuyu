@@ -11,7 +11,7 @@
         <div class="rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-8 transition-all duration-500 hover:scale-[1.01] hover:shadow-2xl">
           <div class="flex items-center gap-6 mb-6">
             <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 p-1 shadow-lg">
-              <img src="https://bu.dusays.com/2026/03/24/69c1e38ac1846.jpg" alt="avatar" class="w-full h-full rounded-xl object-cover bg-white" />
+              <img src="/img/my-logo.jpg" alt="avatar" class="w-full h-full rounded-xl object-cover bg-white" />
             </div>
             <div>
               <h2 class="text-2xl font-black text-slate-900 dark:text-white">zhuyu</h2>

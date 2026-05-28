@@ -1,6 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
-
-export let pendingScrollResolve = null
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
   { path: '/', name: 'Home', component: () => import('../views/Home.vue') },
@@ -19,22 +17,17 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
-    return new Promise((resolve) => {
-      pendingScrollResolve = () => {
-        pendingScrollResolve = null
-        if (savedPosition) return resolve(savedPosition)
-        resolve({ top: 0 })
-      }
-    })
+    if (savedPosition) return savedPosition
+    return { top: 0 }
   },
 })
 
 router.beforeEach((to, from) => {
   if (to.path.startsWith('/posts/') || to.path.startsWith('/chatter/')) {
-    sessionStorage.setItem('detail_from', from.fullPath)
+    sessionStorage.setItem('back_target', from.fullPath)
   }
 })
 
