@@ -1,5 +1,9 @@
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, computed, nextTick } from 'vue'
+import { useMusicPlayer } from '../stores/music.js'
+
+const { state: musicState } = useMusicPlayer()
+const isPlaying = computed(() => musicState.isPlaying)
 
 const catState = ref('idle')
 const isChatOpen = ref(false)
@@ -203,9 +207,10 @@ const sendMessage = async () => {
           <svg
             class="cat-svg w-full h-full"
             :class="{
-              'cat-idle': catState === 'idle',
+              'cat-idle': catState === 'idle' && !isPlaying,
               'cat-petted': catState === 'petted',
               'cat-thinking': catState === 'thinking',
+              'cat-listening': isPlaying,
             }"
             viewBox="0 0 120 120"
             fill="none"
@@ -242,6 +247,12 @@ const sendMessage = async () => {
             <line x1="40" y1="40" x2="26" y2="41" stroke="#aaa" stroke-width="0.6" stroke-linecap="round" />
             <line x1="80" y1="37" x2="94" y2="35" stroke="#aaa" stroke-width="0.6" stroke-linecap="round" />
             <line x1="80" y1="40" x2="94" y2="41" stroke="#aaa" stroke-width="0.6" stroke-linecap="round" />
+            <!-- headphones -->
+            <g v-if="isPlaying" class="cat-headphones">
+              <path d="M38 26 Q60 5 82 26" stroke="#6366f1" stroke-width="3.5" fill="none" stroke-linecap="round" />
+              <rect x="32" y="22" width="12" height="18" rx="4" fill="#6366f1" />
+              <rect x="76" y="22" width="12" height="18" rx="4" fill="#6366f1" />
+            </g>
             <!-- left paw -->
             <ellipse cx="50" cy="94" rx="5" ry="3" fill="white" stroke="#ddd" stroke-width="0.5" />
             <!-- right paw -->
@@ -319,6 +330,9 @@ const sendMessage = async () => {
 .cat-thinking {
   animation: catThink 1.5s ease-in-out infinite;
 }
+.cat-listening {
+  animation: catListen 1.2s ease-in-out infinite;
+}
 
 @keyframes catIdle {
   0%, 100% { transform: translateY(0); }
@@ -334,6 +348,10 @@ const sendMessage = async () => {
   0%, 100% { transform: translateY(0) rotate(0); }
   25% { transform: translateY(-2px) rotate(-3deg); }
   75% { transform: translateY(-1px) rotate(3deg); }
+}
+@keyframes catListen {
+  0%, 100% { transform: rotate(-0.8deg); }
+  50% { transform: rotate(0.8deg); }
 }
 
 .chat-scroll::-webkit-scrollbar {
