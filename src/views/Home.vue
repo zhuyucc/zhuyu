@@ -60,7 +60,7 @@ function resetPostTimer() {
 }
 function resetPhotoTimer() {
   clearInterval(photoTimer)
-  photoTimer = setInterval(() => photoIdx.value = (photoIdx.value + 1) % photos.value.length, 10000)
+  photoTimer = setInterval(() => photoIdx.value = (photoIdx.value + 1) % photos.value.length, 12000)
 }
 function resetChatterTimer() {
   clearInterval(chatterTimer)

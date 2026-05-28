@@ -164,7 +164,12 @@ a {
 }
 .ripple-ring {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  top: 50%;
+  width: 64px;
+  height: 64px;
+  margin-left: -32px;
+  margin-top: -32px;
   border-radius: 50%;
   border: 2px solid rgba(99, 102, 241, 0.35);
   animation: ripple-wave 2.4s ease-out infinite;
