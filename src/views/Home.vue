@@ -13,6 +13,7 @@ const router = useRouter()
 
 const props = defineProps({
   isDark: Boolean,
+  themeMode: String,
 })
 const emit = defineEmits(['toggleDark'])
 
@@ -230,7 +231,7 @@ onUnmounted(() => {
               </div>
             </div>
             <div class="sm:col-span-1 flex flex-col min-h-[120px]">
-              <ThemeToggle :is-dark="props.isDark" @toggle="emit('toggleDark')" />
+              <ThemeToggle :is-dark="props.isDark" :theme-mode="props.themeMode" @toggle="emit('toggleDark')" />
             </div>
           </div>
         </div>

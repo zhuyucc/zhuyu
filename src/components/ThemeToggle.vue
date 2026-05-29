@@ -1,6 +1,7 @@
 <script setup>
-const props = defineProps({
+defineProps({
   isDark: Boolean,
+  themeMode: String,
 })
 const emit = defineEmits(['toggle'])
 </script>
@@ -22,23 +23,28 @@ const emit = defineEmits(['toggle'])
         :class="isDark ? 'translate-y-0' : 'translate-y-full'"
         style="background: linear-gradient(to bottom right, #3730a3, #1e293b)"
       ></div>
-      <div
-        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700"
-        :class="isDark ? 'opacity-0 rotate-90 scale-50' : 'opacity-100 rotate-0 scale-100'"
+      <div v-if="themeMode === 'system'"
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 opacity-100"
+      >
+        <svg class="w-8 h-8 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div v-else-if="!isDark"
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 opacity-100"
       >
         <span class="text-3xl drop-shadow-md">☀️</span>
       </div>
-      <div
-        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700"
-        :class="isDark ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-50'"
+      <div v-else
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 opacity-100"
       >
         <span class="text-3xl drop-shadow-md">🌸</span>
       </div>
     </div>
     <div class="text-center z-10 mt-auto">
-      <h3 class="text-xl font-bold transition-colors duration-500" :class="isDark ? 'text-white' : 'text-slate-800'">夜间模式</h3>
+      <h3 class="text-xl font-bold transition-colors duration-500" :class="isDark ? 'text-white' : 'text-slate-800'">
+        {{ themeMode === 'system' ? '跟随系统' : isDark ? '夜间模式' : '日间模式' }}
+      </h3>
       <p class="text-sm font-medium mt-1 transition-colors duration-500" :class="isDark ? 'text-slate-400' : 'text-slate-500'">
-        {{ isDark ? '流萤飞舞的深夜' : '晴空万里的白昼' }}
+        {{ themeMode === 'system' ? '自动适配' : isDark ? '流萤飞舞的深空' : '晴空万里的白昼' }}
       </p>
     </div>
   </div>

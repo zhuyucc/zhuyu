@@ -30,6 +30,26 @@ const filteredPlaylist = computed(() => {
   })
 })
 
+const progressRef = ref(null)
+
+const handleProgressClick = (e) => {
+  if (!state.duration || !progressRef.value) return
+  const rect = progressRef.value.getBoundingClientRect()
+  const pct = (e.clientX - rect.left) / rect.width
+  seek(Math.max(0, Math.min(1, pct)))
+}
+
+const startDrag = (e) => {
+  handleProgressClick(e)
+  const onMove = (ev) => { handleProgressClick(ev) }
+  const onUp = () => {
+    document.removeEventListener('mousemove', onMove)
+    document.removeEventListener('mouseup', onUp)
+  }
+  document.addEventListener('mousemove', onMove)
+  document.addEventListener('mouseup', onUp)
+}
+
 function pickSong(song) {
   const idx = playlist.indexOf(song)
   if (idx >= 0) selectSong(idx)
@@ -100,14 +120,18 @@ function pickSong(song) {
 
           <!-- Progress -->
           <div class="hidden sm:block w-64">
-            <div
-              class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full cursor-pointer group/progress overflow-hidden"
-              @click="seek(($event.offsetX / $event.currentTarget.offsetWidth))"
-            >
               <div
-                class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-200 relative"
-                :style="{ width: progressPercent + '%' }"
-              />
+                ref="progressRef"
+                class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full cursor-pointer group/progress overflow-hidden relative"
+                @click="handleProgressClick"
+                @mousedown="startDrag"
+              >
+                <div
+                  class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-200 relative"
+                  :style="{ width: progressPercent + '%' }"
+                >
+                  <div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-md opacity-0 group-hover/progress:opacity-100 transition-opacity"></div>
+                </div>
             </div>
             <div class="flex justify-between mt-0.5 text-[10px] text-slate-400 font-mono">
               <span>{{ formatTime(state.currentTime) }}</span>
