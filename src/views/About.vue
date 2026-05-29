@@ -34,8 +34,29 @@
               <span class="text-slate-600 dark:text-slate-400">GitHub</span>
             </div>
             <div class="flex items-center gap-3">
-              <svg class="w-5 h-5 text-indigo-500" fill="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-              <span class="text-slate-600 dark:text-slate-400">bilibiliwuwuwu@gmail.com</span>
+              <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linejoin="round"/></svg>
+              <span class="text-slate-600 dark:text-slate-400">2404831604@qq.com</span>
+            </div>
+          </div>
+          <div class="mt-5 pt-5 border-t border-slate-200 dark:border-slate-700">
+            <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">社交平台</h4>
+            <div class="flex flex-col gap-2">
+              <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/40 dark:bg-slate-700/40 border border-white/30 dark:border-white/5 shadow-sm" title="点击复制 QQ号">
+                <img src="/img/platforms/qq.png" class="w-6 h-6 flex-shrink-0 rounded-md" alt="QQ">
+                <span class="text-xs font-medium text-slate-600 dark:text-slate-300 select-all">123456789</span>
+              </div>
+              <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/40 dark:bg-slate-700/40 border border-white/30 dark:border-white/5 shadow-sm" title="点击复制 抖音号">
+                <img src="/img/platforms/douyin.png" class="w-6 h-6 flex-shrink-0 rounded-md" alt="抖音">
+                <span class="text-xs font-medium text-slate-600 dark:text-slate-300 select-all">@douyin_id</span>
+              </div>
+              <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/40 dark:bg-slate-700/40 border border-white/30 dark:border-white/5 shadow-sm" title="点击复制 B站UID">
+                <img src="/img/platforms/bilibili.png" class="w-6 h-6 flex-shrink-0 rounded-md" alt="B站">
+                <span class="text-xs font-medium text-slate-600 dark:text-slate-300 select-all">UID: 123456789</span>
+              </div>
+              <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/40 dark:bg-slate-700/40 border border-white/30 dark:border-white/5 shadow-sm" title="点击复制 小红书号">
+                <img src="/img/platforms/xiaohongshu.png" class="w-6 h-6 flex-shrink-0 rounded-md" alt="小红书">
+                <span class="text-xs font-medium text-slate-600 dark:text-slate-300 select-all">@xiaohongshu_id</span>
+              </div>
             </div>
           </div>
         </div>

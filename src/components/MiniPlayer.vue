@@ -41,7 +41,7 @@ const startDrag = (e) => {
 </script>
 
 <template>
-  <div class="h-full w-full rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-8 flex flex-col items-center justify-center transition-colors duration-700">
+  <div class="h-full w-full rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-4 sm:p-5 flex flex-col items-center justify-center transition-colors duration-700">
     <div v-if="!state.duration && !state.isPlaying" class="flex flex-col items-center justify-center gap-4">
       <div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
       <span class="text-slate-800 dark:text-white font-bold tracking-widest animate-pulse text-sm">CONNECTING...</span>
@@ -50,7 +50,7 @@ const startDrag = (e) => {
       </div>
     </div>
     <template v-else>
-      <div class="flex items-center gap-5 w-full mb-8">
+      <div class="flex items-center gap-4 w-full mb-4">
         <div class="relative shrink-0 w-16 h-16 flex items-center justify-center">
           <!-- Water ripple rings -->
           <div v-if="state.isPlaying" class="ripple-ring"></div>
@@ -91,7 +91,7 @@ const startDrag = (e) => {
         </div>
       </div>
 
-      <div class="text-sm md:text-base text-center text-slate-600 dark:text-slate-300 italic mb-3 px-2 h-7 md:h-8 leading-none flex items-center justify-center">
+      <div class="text-sm md:text-base text-center text-slate-600 dark:text-slate-300 italic mb-2 px-2 h-6 md:h-7 leading-none flex items-center justify-center">
         <span class="truncate">{{ showLyrics && currentLyricLine ? currentLyricLine : '' }}</span>
       </div>
 
